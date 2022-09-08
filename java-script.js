@@ -16,6 +16,7 @@ element.addEventListener("click", function() {
             .then(data => {
                 
                 // what to do with the data that was fetched
+               
                 createMovies(data.results)
             })
 
@@ -24,6 +25,8 @@ element.addEventListener("click", function() {
             .catch(error => {
                 console.error('Oh something went wrong with the data!', error)
             })
+
+            
         
         // Function that takes the fetched data and targets the movie title to display it 
         const createMovies = (input) => {
@@ -34,9 +37,28 @@ element.addEventListener("click", function() {
 
             // for every movie title, create a <li> element with a child <span> element
             for (let i = 0; i < input.length; i++) {
+
+                    let starshipLinks = []
+
                     movies.push(input[i].title)
+                    starshipLinks = input[i].vehicles
                     const li = document.createElement('li')
                     const span = document.createElement('span')
+
+                    for (j = 0; j < starshipLinks.length; j++) {
+                    // starship fetch
+                    fetch(starshipLinks[j])
+                        .then(response => response.json())
+                        .then(data => {
+                    
+                         
+                        createSS(data.name)
+                        })
+
+                        .catch(error => {
+                            console.error('Oh something went wrong with the data!', error)
+                        })
+                    }
 
                     // giving the newly created elements "css classes"
                     li.classList.add("movie-title-list-item")
@@ -51,20 +73,41 @@ element.addEventListener("click", function() {
                     const p = document.createElement('p')
                     p.classList.add("content-hidden")
                     p.innerText = input[i].opening_crawl
-                    span.appendChild(p) 
+                    span.appendChild(p)
+                
+
+                    // making the starship descriptions
+                    const createSS = (input) => {
+
+                        const ssLi = document.createElement('li')
+                        const ssSpan = document.createElement('span')
+                        const ss = document.createElement("ul")
+                        ss.classList.add("content-hidden")
+                        ssSpan.innerText = input
+                        span.appendChild(ss)
+                        ss.appendChild(ssLi)
+                        ssLi.appendChild(ssSpan)
+
+                        //turn off/on the css class that hides the starships
+                        span.addEventListener("click", function() {
+
+                            ss.classList.toggle("content-hidden")
+                        })  
+
+                    }
                     
                     // listen for click on movie title
                     span.addEventListener("click", function() {
 
                         //turn off/on the css class that hides the movie description
                         p.classList.toggle("content-hidden")
-
-                    })
+                    })  
             }
         }
     }
 });
 
+// To-Do--- Make button for starship collapsable. Read exercise. Make pretty.
 
 
 

@@ -8,15 +8,11 @@
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
-
-    
 }
-
 
 .movie-title-text {
     background-color: salmon;
-    color:green;
-    
+    color:green; 
 }
 
 .movie-title-list-item {
