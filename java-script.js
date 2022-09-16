@@ -10,6 +10,8 @@ element.addEventListener("click", function() {
     // check if button was pressed or not
     if(! document.getElementById('container').hasChildNodes()) {
 
+        const baseUrl = "https://swapi.dev/api"
+
         // getting data from target URL
         fetch(`${baseUrl}/films/`)
             .then(response => response.json())
@@ -25,8 +27,6 @@ element.addEventListener("click", function() {
             .catch(error => {
                 console.error('Oh something went wrong with the data!', error)
             })
-
-            
         
         // Function that takes the fetched data and targets the movie title to display it 
         const createMovies = (input) => {
@@ -44,17 +44,16 @@ element.addEventListener("click", function() {
                     starshipLinks = input[i].vehicles
                     const li = document.createElement('li')
                     const span = document.createElement('span')
+                    const button = document.createElement("button")
+                    button.innerText = "What Starships are in this movie?"
 
                     for (j = 0; j < starshipLinks.length; j++) {
                     // starship fetch
                     fetch(starshipLinks[j])
                         .then(response => response.json())
                         .then(data => {
-                    
-                         
-                        createSS(data.name)
+                            createSS(data.name)
                         })
-
                         .catch(error => {
                             console.error('Oh something went wrong with the data!', error)
                         })
@@ -63,19 +62,24 @@ element.addEventListener("click", function() {
                     // giving the newly created elements "css classes"
                     li.classList.add("movie-title-list-item")
                     span.classList.add("movie-title-text")
+                    button.classList.add("content-hidden","ssButton")
 
                     // where the text is actually added
                     span.innerText = input[i].title
                     ul.appendChild(li)
                     li.appendChild(span)
+                    // Add Button for displaying Starship Info
+                    li.appendChild(button)
 
                     // making the movie descriptions
                     const p = document.createElement('p')
+                    const div = document.createElement('div')
+                    div.classList.add("wrapper")
                     p.classList.add("content-hidden")
                     p.innerText = input[i].opening_crawl
-                    span.appendChild(p)
+                    ul.appendChild(div)
+                    div.appendChild(p)
                 
-
                     // making the starship descriptions
                     const createSS = (input) => {
 
@@ -89,11 +93,10 @@ element.addEventListener("click", function() {
                         ssLi.appendChild(ssSpan)
 
                         //turn off/on the css class that hides the starships
-                        span.addEventListener("click", function() {
+                        button.addEventListener("click", function() {
 
                             ss.classList.toggle("content-hidden")
                         })  
-
                     }
                     
                     // listen for click on movie title
@@ -101,13 +104,34 @@ element.addEventListener("click", function() {
 
                         //turn off/on the css class that hides the movie description
                         p.classList.toggle("content-hidden")
+                        button.classList.toggle("content-hidden")
                     })  
             }
         }
     }
 });
 
-// To-Do--- Make button for starship collapsable. Read exercise. Make pretty.
+    // Sets the number of stars to display
+    const numStars = 500;
+
+    // Generating the stars to be displayed
+    for (let i = 0; i < numStars; i++) {
+        let star = document.createElement("div");  
+        star.className = "star";
+        var xy = getRandomPosition();
+        star.style.top = xy[0] + 'px';
+        star.style.left = xy[1] + 'px';
+        document.body.append(star);
+    }
+
+    // Get random x, y values
+    function getRandomPosition() {  
+        var y = window.innerWidth;
+        var x = window.innerHeight;
+        var randomX = Math.floor(Math.random()*x);
+        var randomY = Math.floor(Math.random()*y);
+        return [randomX,randomY];
+    }
 
 
 
